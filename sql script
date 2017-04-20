@@ -1,0 +1,68 @@
+CREATE SCHEMA IF NOT EXISTS `mydb1` DEFAULT CHARACTER SET utf8 ;
+USE `mydb1` ;
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`Country`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`Country` (
+  `id_country` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_country`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`Region`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`Region` (
+  `id_region` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `id_country` INT NOT NULL,
+  PRIMARY KEY (`id_region`),
+  INDEX `fk_Region_Country_idx` (`id_country` ASC),
+  CONSTRAINT `fk_Region_Country`
+    FOREIGN KEY (`id_country`)
+    REFERENCES `mydb1`.`Country` (`id_country`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`City`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`City` (
+  `id_city` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `id_region` INT NOT NULL,
+  PRIMARY KEY (`id_city`),
+  INDEX `fk_City_Region1_idx` (`id_region` ASC),
+  CONSTRAINT `fk_City_Region1`
+    FOREIGN KEY (`id_region`)
+    REFERENCES `mydb1`.`Region` (`id_region`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`Student`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`Student` (
+  `id_student` INT NOT NULL AUTO_INCREMENT,
+  `firstname` VARCHAR(45) NOT NULL,
+  `surname` VARCHAR(45) NOT NULL,
+  `gender` VARCHAR(5) NOT NULL,
+  `birthday` DATE NOT NULL,
+  `address` VARCHAR(45) NOT NULL,
+  `phone` VARCHAR(45) NOT NULL,
+  `id_city` INT NOT NULL,
+  PRIMARY KEY (`id_student`),
+  INDEX `fk_Student_City1_idx` (`id_city` ASC),
+  CONSTRAINT `fk_Student_City1`
+    FOREIGN KEY (`id_city`)
+    REFERENCES `mydb1`.`City` (`id_city`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
