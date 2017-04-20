@@ -1,51 +1,35 @@
-CREATE SCHEMA IF NOT EXISTS `mydb1` DEFAULT CHARACTER SET utf8 ;
-USE `mydb1` ;
-
--- -----------------------------------------------------
--- Table `mydb1`.`Country`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb1`.`Country` (
-  `id_country` INT NOT NULL,
-  `name` VARCHAR(45) NULL,
-  PRIMARY KEY (`id_country`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb1`.`Region`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb1`.`Region` (
-  `id_region` INT NOT NULL,
-  `name` VARCHAR(45) NULL,
-  `id_country` INT NOT NULL,
-  PRIMARY KEY (`id_region`),
-  INDEX `fk_Region_Country_idx` (`id_country` ASC),
-  CONSTRAINT `fk_Region_Country`
-    FOREIGN KEY (`id_country`)
-    REFERENCES `mydb1`.`Country` (`id_country`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb1`.`City`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb1`.`City` (
-  `id_city` INT NOT NULL,
-  `name` VARCHAR(45) NULL,
-  `id_region` INT NOT NULL,
+CREATE DATABASE `mydb1` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE TABLE `city` (
+  `id_city` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `id_region` int(11) NOT NULL,
   PRIMARY KEY (`id_city`),
-  INDEX `fk_City_Region1_idx` (`id_region` ASC),
-  CONSTRAINT `fk_City_Region1`
-    FOREIGN KEY (`id_region`)
-    REFERENCES `mydb1`.`Region` (`id_region`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
+  KEY `fk_City_Region1_idx` (`id_region`),
+  CONSTRAINT `fk_City_Region1` FOREIGN KEY (`id_region`) REFERENCES `region` (`id_region`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `country` (
+  `id_country` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id_country`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `region` (
+  `id_region` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `id_country` int(11) NOT NULL,
+  PRIMARY KEY (`id_region`),
+  KEY `fk_Region_Country_idx` (`id_country`),
+  CONSTRAINT `fk_Region_Country` FOREIGN KEY (`id_country`) REFERENCES `country` (`id_country`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `student` (
+  `id_student` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(45) NOT NULL,
+  `surname` varchar(45) NOT NULL,
+  `birthday` varchar(45) NOT NULL,
+  `id_city` int(11) NOT NULL,
+  PRIMARY KEY (`id_student`),
+  KEY `fk_Student_City1_idx` (`id_city`),
+  CONSTRAINT `fk_Student_City1` FOREIGN KEY (`id_city`) REFERENCES `city` (`id_city`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 -- Table `mydb1`.`Student`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb1`.`Student` (
