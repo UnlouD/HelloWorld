@@ -1,39 +1,55 @@
-CREATE DATABASE `mydb1` /*!40100 DEFAULT CHARACTER SET utf8 */;
-CREATE TABLE `city` (
-  `id_city` int(11) NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `id_region` int(11) NOT NULL,
-  PRIMARY KEY (`id_city`),
-  KEY `fk_City_Region1_idx` (`id_region`),
-  CONSTRAINT `fk_City_Region1` FOREIGN KEY (`id_region`) REFERENCES `region` (`id_region`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-CREATE TABLE `country` (
-  `id_country` int(11) NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id_country`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-CREATE TABLE `region` (
-  `id_region` int(11) NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `id_country` int(11) NOT NULL,
-  PRIMARY KEY (`id_region`),
-  KEY `fk_Region_Country_idx` (`id_country`),
-  CONSTRAINT `fk_Region_Country` FOREIGN KEY (`id_country`) REFERENCES `country` (`id_country`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-CREATE TABLE `student` (
-  `id_student` int(11) NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(45) NOT NULL,
-  `surname` varchar(45) NOT NULL,
-  `birthday` varchar(45) NOT NULL,
-  `id_city` int(11) NOT NULL,
-  PRIMARY KEY (`id_student`),
-  KEY `fk_Student_City1_idx` (`id_city`),
-  CONSTRAINT `fk_Student_City1` FOREIGN KEY (`id_city`) REFERENCES `city` (`id_city`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
--- Table `mydb1`.`Student`
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb1`.`Student` (
-  `id_student` INT NOT NULL AUTO_INCREMENT,
+-- Table `mydb`.`Country`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Country` (
+  `number` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`number`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Region`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Region` (
+  `number` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `country` INT NOT NULL,
+  PRIMARY KEY (`number`),
+  INDEX `fk_Region_Country_idx` (`country` ASC),
+  CONSTRAINT `fk_Region_Country`
+    FOREIGN KEY (`country`)
+    REFERENCES `mydb`.`Country` (`number`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`City`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`City` (
+  `number` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `region` INT NOT NULL,
+  PRIMARY KEY (`number`),
+  INDEX `fk_City_Region1_idx` (`region` ASC),
+  CONSTRAINT `fk_City_Region1`
+    FOREIGN KEY (`region`)
+    REFERENCES `mydb`.`Region` (`number`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Student`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Student` (
+  `number` INT NOT NULL AUTO_INCREMENT,
   `firstname` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
   `gender` VARCHAR(5) NOT NULL,
@@ -41,12 +57,14 @@ CREATE TABLE IF NOT EXISTS `mydb1`.`Student` (
   `address` VARCHAR(45) NOT NULL,
   `phone` VARCHAR(45) NOT NULL,
   `id_city` INT NOT NULL,
-  PRIMARY KEY (`id_student`),
+  PRIMARY KEY (`number`),
   INDEX `fk_Student_City1_idx` (`id_city` ASC),
   CONSTRAINT `fk_Student_City1`
     FOREIGN KEY (`id_city`)
-    REFERENCES `mydb1`.`City` (`id_city`)
+    REFERENCES `mydb`.`City` (`number`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
